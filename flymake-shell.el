@@ -17,7 +17,7 @@
 
 (defvar flymake-shell-supported-shells '(bash zsh))
 
-(defcustom flymake-shell-err-line-pattern-re
+(defvar flymake-shell-err-line-pattern-re
   '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3) ; bash
     ("^\\(.+\\):\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh
   "Regexp matching JavaScript error messages.")
@@ -36,10 +36,10 @@
     (error "cannot enable flymake-shell in this major mode"))
   (if (memq sh-shell flymake-shell-supported-shells)
       (progn
-        (make-variable-buffer-local 'flymake-allowed-file-name-masks)
-        (setq flymake-allowed-file-name-masks '(("." flymake-shell-init)))
-        (make-variable-buffer-local 'flymake-err-line-patterns)
-        (setq flymake-err-line-patterns flymake-shell-err-line-pattern-re)
+        ;; We know we're in shell-script mode, so stop flymake
+        ;; second-guessing based on filename
+        (set (make-local-variable 'flymake-allowed-file-name-masks) '(("." flymake-shell-init)))
+        (set (make-local-variable 'flymake-err-line-patterns) flymake-shell-err-line-pattern-re)
         (flymake-mode t)
         (local-set-key (kbd "C-c d") 'flymake-display-err-menu-for-current-line))
     (message "Shell %s is not supported by flymake-shell" sh-shell)))
