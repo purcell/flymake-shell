@@ -15,23 +15,26 @@
 (require 'flymake)
 
 
-(defvar flymake-shell-supported-shells '(bash zsh))
+(defconst flymake-shell-supported-shells '(bash zsh))
 
-(defvar flymake-shell-err-line-pattern-re
+(defconst flymake-shell-err-line-pattern-re
   '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3) ; bash
     ("^\\(.+\\):\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh
   "Regexp matching JavaScript error messages.")
 
 (defun flymake-shell-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-		     'flymake-create-temp-inplace))
-	 (local-file (file-relative-name
-		      temp-file
-		      (file-name-directory buffer-file-name))))
-    (list (format "%s" sh-shell) (append '("-n") (list local-file)))))
+  (list (format "%s" sh-shell)
+        (list "-n" (flymake-init-create-temp-buffer-copy
+                    'flymake-create-temp-inplace))))
 
 ;;;###autoload
 (defun flymake-shell-load ()
+  "Configure flymake mode to check the current buffer's shell-script syntax.
+
+This function is designed to be called in `sh-set-shell-hook'; it
+does not alter flymake's global configuration, so `flymake-mode'
+alone will not suffice."
+  (interactive)
   (unless (eq 'sh-mode major-mode)
     (error "cannot enable flymake-shell in this major mode"))
   (if (memq sh-shell flymake-shell-supported-shells)
@@ -40,10 +43,11 @@
         ;; second-guessing based on filename
         (set (make-local-variable 'flymake-allowed-file-name-masks) '(("." flymake-shell-init)))
         (set (make-local-variable 'flymake-err-line-patterns) flymake-shell-err-line-pattern-re)
-        (flymake-mode t)
-        (local-set-key (kbd "C-c d") 'flymake-display-err-menu-for-current-line))
+        (if (executable-find (symbol-name sh-shell))
+            (flymake-mode t)
+          (message "Not enabling flymake: '%s' command not found" sh-shell)))
     (message "Shell %s is not supported by flymake-shell" sh-shell)))
 
-(provide 'flymake-shell)
 
+(provide 'flymake-shell)
 ;;; flymake-shell.el ends here
