@@ -14,6 +14,7 @@
 
 (require 'flymake)
 
+;;; Code:
 
 (defconst flymake-shell-supported-shells '(bash zsh sh))
 
@@ -23,6 +24,7 @@
   "Regexp matching JavaScript error messages.")
 
 (defun flymake-shell-init ()
+  "Construct a command that flymake can use to check shell source."
   (list (format "%s" sh-shell)
         (list "-n" (flymake-init-create-temp-buffer-copy
                     'flymake-create-temp-inplace))))
@@ -32,11 +34,11 @@
   "Configure flymake mode to check the current buffer's shell-script syntax.
 
 This function is designed to be called in `sh-set-shell-hook'; it
-does not alter flymake's global configuration, so `flymake-mode'
-alone will not suffice."
+does not alter flymake's global configuration, so function
+`flymake-mode' alone will not suffice."
   (interactive)
   (unless (eq 'sh-mode major-mode)
-    (error "cannot enable flymake-shell in this major mode"))
+    (error "Cannot enable flymake-shell in this major mode"))
   (if (memq sh-shell flymake-shell-supported-shells)
       (progn
         ;; We know we're in shell-script mode, so stop flymake
