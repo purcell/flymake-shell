@@ -23,11 +23,19 @@
     ("^\\(.+\\):\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh
   "Regexp matching JavaScript error messages.")
 
+(defun flymake-shell--create-temp-in-system-tempdir (file-name prefix)
+  "Return a temporary file name into which flymake can save buffer contents.
+
+This is tidier than `flymake-create-temp-inplace', and therefore
+preferable when the checking doesn't depend on the file's exact
+location."
+  (make-temp-file (or prefix "flymake-shell") nil ".sh"))
+
 (defun flymake-shell-init ()
   "Construct a command that flymake can use to check shell source."
   (list (format "%s" sh-shell)
         (list "-n" (flymake-init-create-temp-buffer-copy
-                    'flymake-create-temp-inplace))))
+                    'flymake-shell--create-temp-in-system-tempdir))))
 
 ;;;###autoload
 (defun flymake-shell-load ()
