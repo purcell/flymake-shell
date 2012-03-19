@@ -59,5 +59,10 @@ does not alter flymake's global configuration, so function
     (message "Shell %s is not supported by flymake-shell" sh-shell)))
 
 
+(defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+  (setq flymake-check-was-interrupted t))
+(ad-activate 'flymake-post-syntax-check)
+
+
 (provide 'flymake-shell)
 ;;; flymake-shell.el ends here
