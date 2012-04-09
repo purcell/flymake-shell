@@ -21,7 +21,7 @@
 (defconst flymake-shell-err-line-pattern-re
   '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3) ; bash
     ("^\\(.+\\):\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh
-  "Regexp matching JavaScript error messages.")
+  "Regexp matching shell error messages.")
 
 (defun flymake-shell--create-temp-in-system-tempdir (file-name prefix)
   "Return a temporary file name into which flymake can save buffer contents.
