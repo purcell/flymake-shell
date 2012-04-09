@@ -20,7 +20,7 @@
 
 (defconst flymake-shell-err-line-pattern-re
   '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3) ; bash
-    ("^\\(.+\\):\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh
+    ("^\\(.+\\): ?\\([0-9]+\\): \\(.+\\)$" 1 2 nil 3)) ; zsh / dash
   "Regexp matching shell error messages.")
 
 (defun flymake-shell--create-temp-in-system-tempdir (file-name prefix)
