@@ -16,7 +16,7 @@
 
 ;;; Code:
 
-(defconst flymake-shell-supported-shells '(bash zsh sh))
+(defconst flymake-shell-supported-shells '(bash zsh sh dash))
 
 (defconst flymake-shell-err-line-pattern-re
   '(("^\\(.+\\): line \\([0-9]+\\): \\(.+\\)$" 1 2 nil 3) ; bash
