@@ -33,7 +33,7 @@ location."
 
 (defun flymake-shell-init ()
   "Construct a command that flymake can use to check shell source."
-  (list (format "%s" sh-shell)
+  (list (symbol-name sh-shell)
         (list "-n" (flymake-init-create-temp-buffer-copy
                     'flymake-shell--create-temp-in-system-tempdir))))
 
